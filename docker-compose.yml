@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # ── MongoDB Database ─────────────────────────────────
+  mongodb:
+    image: mongo:7.0
+    container_name: jira_tracker_mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - jira_network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Express Backend API ──────────────────────────────
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: jira_tracker_server
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/jira_tracker?authSource=admin
+      JWT_ACCESS_SECRET: jira_access_secret_production_key_random_64_chars_min
+      JWT_REFRESH_SECRET: jira_refresh_secret_production_key_random_64_chars_min
+      JWT_ACCESS_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      CLIENT_URL: http://localhost
+    volumes:
+      - uploads_data:/app/uploads
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - jira_network
+
+  # ── React + Vite + Nginx Frontend ────────────────────
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: jira_tracker_client
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    networks:
+      - jira_network
+
+volumes:
+  mongodb_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+networks:
+  jira_network:
+    driver: bridge
