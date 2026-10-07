@@ -67,7 +67,7 @@ export const register = asyncHandler(async (req, res) => {
   sendWelcomeEmail(user).catch(console.error);
 
   res.status(201).json(
-    new ApiResponse(201, { user: sanitiseUser(user) }, 'Account created successfully'),
+    new ApiResponse(201, { user: sanitiseUser(user), accessToken }, 'Account created successfully'),
   );
 });
 
@@ -85,7 +85,7 @@ export const login = asyncHandler(async (req, res) => {
   user.refreshTokenHash = hashToken(refreshToken);
   await user.save();
 
-  res.json(new ApiResponse(200, { user: sanitiseUser(user) }, 'Logged in'));
+  res.json(new ApiResponse(200, { user: sanitiseUser(user), accessToken }, 'Logged in'));
 });
 
 /** POST /auth/logout */
@@ -120,7 +120,7 @@ export const refresh = asyncHandler(async (req, res) => {
   user.refreshTokenHash = hashToken(newRefresh);
   await user.save();
 
-  res.json(new ApiResponse(200, null, 'Token refreshed'));
+  res.json(new ApiResponse(200, { accessToken }, 'Token refreshed'));
 });
 
 /** POST /auth/forgot-password */

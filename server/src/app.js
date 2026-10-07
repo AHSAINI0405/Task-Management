@@ -24,6 +24,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uploadDir = path.resolve(__dirname, '../uploads');
 
+// ── Trust proxy (required for secure cookies behind Render/Vercel proxies) ──
+app.set('trust proxy', 1);
+
 // ── Security headers ───────────────────────────────────────────────────
 app.use(
   helmet({
@@ -35,14 +38,56 @@ app.use(
 app.use('/uploads', express.static(uploadDir));
 
 // ── CORS ───────────────────────────────────────────────────────────────
-app.use(
-  cors({
-    origin:      env.CLIENT_URL,
-    credentials: true,               // allow cookies cross-origin
-    methods:     ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  }),
-);
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true; // allow mobile apps, curl, etc.
+
+  const clean = origin.trim().replace(/\/$/, '');
+
+  // Check against CLIENT_URL (supports comma-separated origins)
+  const configuredList = (env.CLIENT_URL || '')
+    .split(',')
+    .map((u) => u.trim().replace(/\/$/, ''))
+    .filter(Boolean);
+
+  if (configuredList.includes(clean)) return true;
+
+  // Always allow the user's Vercel deployment and any Vercel preview branch
+  if (
+    clean === 'https://task-management-alpha-tan.vercel.app' ||
+    clean.endsWith('.vercel.app')
+  ) {
+    return true;
+  }
+
+  // Local development
+  if (
+    clean.startsWith('http://localhost:') ||
+    clean.startsWith('http://127.0.0.1:') ||
+    clean === 'http://localhost'
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (isAllowedOrigin(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`[CORS] Blocked request from origin: ${origin}`);
+      callback(new Error(`Origin ${origin} not allowed by CORS policy`));
+    }
+  },
+  credentials: true, // allow sending cookies cross-origin
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Set-Cookie'],
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // ── Body / cookie parsers ──────────────────────────────────────────────
 app.use(express.json({ limit: '50kb' }));

@@ -12,7 +12,7 @@ const envSchema = z.object({
   JWT_ACCESS_EXPIRES_IN:  z.string().default('15m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
 
-  CLIENT_URL: z.string().url().default('http://localhost:5173'),
+  CLIENT_URL: z.string().default('http://localhost:5173'),
 
   EMAILJS_SERVICE_ID:  z.string().default(''),
   EMAILJS_TEMPLATE_ID: z.string().default(''),

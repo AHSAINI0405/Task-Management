@@ -37,14 +37,16 @@ self.addEventListener('activate', (event) => {
 
 // Fetch: network first with offline fallback for navigation
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests and skip API requests from caching
+  // Only handle GET requests
   if (event.request.method !== 'GET') return;
+
   const url = new URL(event.request.url);
 
-  if (url.pathname.startsWith('/api')) {
-    // Let API calls go to network directly
-    return;
-  }
+  // NEVER intercept cross-origin requests (e.g. backend API on Render)
+  if (url.origin !== self.location.origin) return;
+
+  // Skip local API requests
+  if (url.pathname.startsWith('/api')) return;
 
   event.respondWith(
     fetch(event.request)
@@ -61,9 +63,14 @@ self.addEventListener('fetch', (event) => {
         const cached = await caches.match(event.request);
         if (cached) return cached;
         if (event.request.mode === 'navigate') {
-          return caches.match('/index.html');
+          const fallback = await caches.match('/index.html');
+          if (fallback) return fallback;
         }
-      })
+        return new Response('Network error occurred', {
+          status: 408,
+          headers: { 'Content-Type': 'text/plain' },
+        });
+      }),
   );
 });
 

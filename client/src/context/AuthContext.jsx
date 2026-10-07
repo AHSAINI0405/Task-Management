@@ -24,18 +24,25 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (credentials) => {
     const res = await authApi.login(credentials);
+    if (res.data.data.accessToken) {
+      localStorage.setItem('token', res.data.data.accessToken);
+    }
     setUser(res.data.data.user);
     return res.data.data.user;
   }, []);
 
   const register = useCallback(async (data) => {
     const res = await authApi.register(data);
+    if (res.data.data.accessToken) {
+      localStorage.setItem('token', res.data.data.accessToken);
+    }
     setUser(res.data.data.user);
     return res.data.data.user;
   }, []);
 
   const logout = useCallback(async () => {
     await authApi.logout().catch(() => {});
+    localStorage.removeItem('token');
     setUser(null);
   }, []);
 

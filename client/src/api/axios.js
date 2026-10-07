@@ -6,6 +6,15 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+// ── Attach Bearer Token (hybrid support for cross-domain cookie blocking) ──
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token && !config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // ── Silent token refresh on 401 ───────────────────────────────────────
 let isRefreshing = false;
 let failedQueue  = [];
@@ -40,7 +49,10 @@ api.interceptors.response.use(
       isRefreshing    = true;
 
       try {
-        await api.post('/auth/refresh');
+        const refreshRes = await api.post('/auth/refresh');
+        if (refreshRes.data?.data?.accessToken) {
+          localStorage.setItem('token', refreshRes.data.data.accessToken);
+        }
         processQueue(null);
         return api(original);
       } catch (refreshError) {

@@ -63,8 +63,13 @@ export function setAuthCookies(res, userId) {
 
 /** Helper: clear both auth cookies */
 export function clearAuthCookies(res) {
-  res.clearCookie('accessToken',  { httpOnly: true, secure: env.NODE_ENV === 'production' });
-  res.clearCookie('refreshToken', { httpOnly: true, secure: env.NODE_ENV === 'production' });
+  const opts = {
+    httpOnly: true,
+    secure:   env.NODE_ENV === 'production',
+    sameSite: env.NODE_ENV === 'production' ? 'None' : 'Lax',
+  };
+  res.clearCookie('accessToken', opts);
+  res.clearCookie('refreshToken', opts);
 }
 
 /** Hash a password */
