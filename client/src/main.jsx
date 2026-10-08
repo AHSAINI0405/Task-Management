@@ -11,8 +11,8 @@ import './index.css';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime:          1000 * 60 * 2, // 2 minutes
-      retry:              1,
+      staleTime:            1000 * 60 * 2, // 2 minutes
+      retry:                1,
       refetchOnWindowFocus: false,
     },
   },
@@ -37,17 +37,3 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </QueryClientProvider>
   </React.StrictMode>,
 );
-
-// Register PWA service worker
-if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/sw.js')
-      .then((reg) => {
-        console.log('Service Worker registered successfully with scope:', reg.scope);
-      })
-      .catch((err) => {
-        console.error('Service Worker registration failed:', err);
-      });
-  });
-}

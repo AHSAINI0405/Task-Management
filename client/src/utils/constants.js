@@ -1,4 +1,4 @@
-// Jira-style Task Statuses (exact 5-stage workflow)
+// Jira-style Task Statuses (5-stage workflow)
 export const TASK_STATUSES = ['Idea', 'To Do', 'In Progress', 'In Review', 'Completed'];
 
 export const STATUS_CONFIG = {
@@ -78,7 +78,7 @@ export const PRIORITY_CONFIG = {
   },
 };
 
-// Legacy color maps for backwards compatibility
+// Color maps for backwards compatibility
 export const PRIORITY_COLORS = {
   low:      'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
   medium:   'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
@@ -100,44 +100,9 @@ export const STATUS_COLORS = {
 
 // Query keys for React Query
 export const QK = {
-  tasks:      (params) => ['tasks', params],
+  tasks:     (params) => ['tasks', params],
   todayTasks: () => ['tasks', 'today'],
-  task:       (id) => ['task', id],
-  users:      () => ['users'],
-  dashboard:  () => ['dashboard'],
-  jobs:       (params) => ['jobs', params],
-  pipeline:   () => ['jobs', 'pipeline'],
-  job:        (id) => ['job', id],
-  events:     (params) => ['events', params],
-  event:      (id) => ['event', id],
-  calendar:   (from, to) => ['calendar', from, to],
+  task:      (id) => ['task', id],
+  users:     () => ['users'],
+  dashboard: () => ['dashboard'],
 };
-
-// Legacy exports for other views
-export const JOB_STATUS_COLORS = {
-  Wishlist:      'bg-gray-100 text-gray-600',
-  Applied:       'bg-blue-100 text-blue-700',
-  'Phone Screen':'bg-purple-100 text-purple-700',
-  Interview:     'bg-indigo-100 text-indigo-700',
-  Offer:         'bg-green-100 text-green-700',
-  Rejected:      'bg-red-100 text-red-700',
-  Withdrawn:     'bg-orange-100 text-orange-700',
-};
-
-export const JOB_STATUSES = [
-  'Wishlist', 'Applied', 'Phone Screen', 'Interview', 'Offer', 'Rejected', 'Withdrawn',
-];
-
-export const EVENT_TYPE_COLORS = {
-  birthday:    'bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300',
-  anniversary: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
-  holiday:     'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300',
-  custom:      'bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300',
-};
-
-export const CALENDAR_DOT_COLORS = {
-  task:  'bg-blue-500',
-  job:   'bg-purple-500',
-  event: 'bg-pink-500',
-};
-

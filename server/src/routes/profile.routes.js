@@ -8,9 +8,7 @@ const router = Router();
 // All profile routes require authentication
 router.use(verifyAccessToken);
 
-router.put('/',                  validate(profile.updateProfileSchema),      profile.updateProfile);
-router.put('/password',          validate(profile.changePasswordSchema),     profile.changePassword);
-router.post('/push-subscribe',   validate(profile.pushSubscribeSchema),      profile.addPushSubscription);
-router.delete('/push-subscribe',                                             profile.removePushSubscription);
+router.put('/',         validate(profile.updateProfileSchema),  profile.updateProfile);
+router.put('/password', validate(profile.changePasswordSchema), profile.changePassword);
 
 export default router;

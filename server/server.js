@@ -1,8 +1,7 @@
 import 'dotenv/config';
-import { env }            from './src/config/env.js';
-import { connectDB }      from './src/config/db.js';
-import app                from './src/app.js';
-import { startScheduler, stopScheduler } from './src/jobs/scheduler.js';
+import { env }       from './src/config/env.js';
+import { connectDB } from './src/config/db.js';
+import app           from './src/app.js';
 
 async function bootstrap() {
   await connectDB();
@@ -11,12 +10,9 @@ async function bootstrap() {
     console.log(`  Server running on port ${env.PORT} [${env.NODE_ENV}]`);
   });
 
-  startScheduler();
-
   // ── Graceful shutdown ────────────────────────────────────────────────
   const shutdown = (signal) => {
     console.log(`\n${signal} received — shutting down gracefully`);
-    stopScheduler();
     server.close(() => {
       console.log('HTTP server closed');
       process.exit(0);

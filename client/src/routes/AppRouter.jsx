@@ -9,9 +9,6 @@ import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage.jsx';
 import ResetPasswordPage  from '../pages/auth/ResetPasswordPage.jsx';
 import DashboardPage      from '../pages/DashboardPage.jsx';
 import TasksPage          from '../pages/TasksPage.jsx';
-import JobsPage           from '../pages/JobsPage.jsx';
-import EventsPage         from '../pages/EventsPage.jsx';
-import CalendarPage       from '../pages/CalendarPage.jsx';
 import ProfilePage        from '../pages/ProfilePage.jsx';
 import NotFoundPage       from '../pages/NotFoundPage.jsx';
 
@@ -28,12 +25,9 @@ export default function AppRouter() {
 
       {/* Protected app routes inside AppShell */}
       <Route element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
-        <Route path="/"         element={<DashboardPage />} />
-        <Route path="/tasks"    element={<TasksPage />} />
-        <Route path="/jobs"     element={<JobsPage />} />
-        <Route path="/events"   element={<EventsPage />} />
-        <Route path="/calendar" element={<CalendarPage />} />
-        <Route path="/profile"  element={<ProfilePage />} />
+        <Route path="/"        element={<DashboardPage />} />
+        <Route path="/tasks"   element={<TasksPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

@@ -1,13 +1,12 @@
 {
-  "name": "mytracker-server",
+  "name": "task-management-server",
   "version": "1.0.0",
-  "description": "MyTracker Life Planner – Express API",
+  "description": "Jira-Style Task Management System – Express API",
   "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon --watch src --watch server.js server.js",
-    "generate:vapid": "node -e \"import('web-push').then(m=>console.log(m.default.generateVAPIDKeys()))\""
+    "dev": "nodemon --watch src --watch server.js server.js"
   },
   "dependencies": {
     "@emailjs/nodejs": "^5.0.2",
@@ -21,8 +20,6 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
     "multer": "^2.4.0",
-    "node-cron": "^3.0.3",
-    "web-push": "^3.6.6",
     "zod": "^3.22.4"
   },
   "devDependencies": {

@@ -57,9 +57,4 @@ export function toInputDateTime(date) {
   return dayjs(date).format('YYYY-MM-DDTHH:mm');
 }
 
-/** Start/end of a month for calendar queries */
-export function getMonthRange(year, month) {
-  const start = dayjs().year(year).month(month).startOf('month');
-  const end   = dayjs().year(year).month(month).endOf('month');
-  return { from: start.toISOString(), to: end.toISOString() };
-}
+

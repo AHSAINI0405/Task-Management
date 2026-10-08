@@ -7,13 +7,10 @@ import { apiLimiter } from './middleware/rateLimiter.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 // ── Routes ─────────────────────────────────────────────────────────────
-import authRoutes      from './routes/auth.routes.js';
-import profileRoutes   from './routes/profile.routes.js';
-import taskRoutes      from './routes/tasks.routes.js';
-import jobRoutes       from './routes/jobs.routes.js';
-import eventRoutes     from './routes/events.routes.js';
-import reminderRoutes  from './routes/reminders.routes.js';
-import { dashRouter, calRouter } from './routes/misc.routes.js';
+import authRoutes    from './routes/auth.routes.js';
+import profileRoutes from './routes/profile.routes.js';
+import taskRoutes    from './routes/tasks.routes.js';
+import dashRouter    from './routes/misc.routes.js';
 
 const app = express();
 
@@ -21,10 +18,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const uploadDir = path.resolve(__dirname, '../uploads');
+const __dirname  = path.dirname(__filename);
+const uploadDir  = path.resolve(__dirname, '../uploads');
 
-// ── Trust proxy (required for secure cookies behind Render/Vercel proxies) ──
+// ── Trust proxy (required for secure cookies behind load balancers) ────
 app.set('trust proxy', 1);
 
 // ── Security headers ───────────────────────────────────────────────────
@@ -39,7 +36,7 @@ app.use('/uploads', express.static(uploadDir));
 
 // ── CORS ───────────────────────────────────────────────────────────────
 const isAllowedOrigin = (origin) => {
-  if (!origin) return true; // allow mobile apps, curl, etc.
+  if (!origin) return true;
 
   const clean = origin.trim().replace(/\/$/, '');
 
@@ -51,7 +48,7 @@ const isAllowedOrigin = (origin) => {
 
   if (configuredList.includes(clean)) return true;
 
-  // Always allow the user's Vercel deployment and any Vercel preview branch
+  // Allow any Vercel deployment
   if (
     clean === 'https://task-management-alpha-tan.vercel.app' ||
     clean.endsWith('.vercel.app')
@@ -80,7 +77,7 @@ const corsOptions = {
       callback(new Error(`Origin ${origin} not allowed by CORS policy`));
     }
   },
-  credentials: true, // allow sending cookies cross-origin
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
   exposedHeaders: ['Set-Cookie'],
@@ -102,14 +99,10 @@ app.get('/health', (_req, res) => res.json({ status: 'ok', env: env.NODE_ENV }))
 
 // ── API routes ─────────────────────────────────────────────────────────
 const v1 = '/api/v1';
-app.use(`${v1}/auth`,       authRoutes);
-app.use(`${v1}/profile`,    profileRoutes);
-app.use(`${v1}/tasks`,      taskRoutes);
-app.use(`${v1}/jobs`,       jobRoutes);
-app.use(`${v1}/events`,     eventRoutes);
-app.use(`${v1}/reminders`,  reminderRoutes);
-app.use(`${v1}/dashboard`,  dashRouter);
-app.use(`${v1}/calendar`,   calRouter);
+app.use(`${v1}/auth`,      authRoutes);
+app.use(`${v1}/profile`,   profileRoutes);
+app.use(`${v1}/tasks`,     taskRoutes);
+app.use(`${v1}/dashboard`, dashRouter);
 
 // ── 404 ────────────────────────────────────────────────────────────────
 app.use((_req, res) =>

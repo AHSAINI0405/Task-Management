@@ -7,8 +7,8 @@ const envSchema = z.object({
 
   MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
 
-  JWT_ACCESS_SECRET:    z.string().min(8, 'JWT_ACCESS_SECRET must be ≥ 32 chars'),
-  JWT_REFRESH_SECRET:   z.string().min(8, 'JWT_REFRESH_SECRET must be ≥ 32 chars'),
+  JWT_ACCESS_SECRET:      z.string().min(8, 'JWT_ACCESS_SECRET must be ≥ 8 chars'),
+  JWT_REFRESH_SECRET:     z.string().min(8, 'JWT_REFRESH_SECRET must be ≥ 8 chars'),
   JWT_ACCESS_EXPIRES_IN:  z.string().default('15m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
 
@@ -18,10 +18,6 @@ const envSchema = z.object({
   EMAILJS_TEMPLATE_ID: z.string().default(''),
   EMAILJS_PUBLIC_KEY:  z.string().default(''),
   EMAILJS_PRIVATE_KEY: z.string().default(''),
-
-  VAPID_PUBLIC_KEY:  z.string().default(''),
-  VAPID_PRIVATE_KEY: z.string().default(''),
-  VAPID_EMAIL:       z.string().default('mailto:admin@yourdomain.com'),
 });
 
 const parsed = envSchema.safeParse(process.env);

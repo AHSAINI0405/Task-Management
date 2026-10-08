@@ -6,18 +6,15 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { profileApi } from '../api/api.js';
 import Input, { SelectField } from '../components/ui/Input.jsx';
 import Button from '../components/ui/Button.jsx';
-import PushSubscribeButton from '../components/notifications/PushSubscribeButton.jsx';
 
 const profileSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+  name:     z.string().min(2, 'Name must be at least 2 characters'),
   timezone: z.string().min(1, 'Timezone is required'),
-  notifyByEmail: z.boolean(),
-  notifyByPush: z.boolean(),
 });
 
 const passwordSchema = z.object({
   currentPassword: z.string().min(1, 'Current password is required'),
-  newPassword: z.string().min(8, 'New password must be at least 8 characters'),
+  newPassword:     z.string().min(8, 'New password must be at least 8 characters'),
 });
 
 const COMMON_TIMEZONES = [
@@ -46,10 +43,8 @@ export default function ProfilePage() {
   } = useForm({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: user?.name || '',
+      name:     user?.name || '',
       timezone: user?.timezone || 'UTC',
-      notifyByEmail: user?.notifyByEmail ?? true,
-      notifyByPush: user?.notifyByPush ?? true,
     },
   });
 
@@ -90,7 +85,7 @@ export default function ProfilePage() {
         <div>
           <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Profile Settings</h2>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-            Manage your personal information, timezone, and reminder channels.
+            Manage your personal information and timezone.
           </p>
         </div>
 
@@ -120,25 +115,8 @@ export default function ProfilePage() {
             ))}
           </SelectField>
 
-          <div className="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-700">
-            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-              Notification Channels
-            </p>
-            <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
-              <input type="checkbox" className="rounded" {...regProfile('notifyByEmail')} />
-              Receive email notifications
-            </label>
-            <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
-              <input type="checkbox" className="rounded" {...regProfile('notifyByPush')} />
-              Receive browser web-push notifications
-            </label>
-            <div className="pt-2">
-              <PushSubscribeButton />
-            </div>
-          </div>
-
           <Button type="submit" loading={isProfileSubmitting}>
-            Save Preferences
+            Save Changes
           </Button>
         </form>
       </div>
