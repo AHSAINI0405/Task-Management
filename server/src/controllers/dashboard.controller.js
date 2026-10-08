@@ -2,14 +2,6 @@ import Task from '../models/Task.model.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 
-/**
- * GET /dashboard
- * Returns Jira-style overview statistics:
- * - 6 Overview Cards: Total Tasks, Idea Tasks, To Do Tasks, In Progress Tasks, In Review Tasks, Completed Tasks
- * - Priority breakdown (Critical, High, Medium, Low)
- * - Assigned to Me summary
- * - Recent tasks & recent activity stream (status transitions)
- */
 export const getDashboard = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
