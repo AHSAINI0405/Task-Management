@@ -6,7 +6,7 @@ import Avatar from '../common/Avatar.jsx';
 
 const PAGE_TITLES = {
   '/':         'Project Overview',
-  '/tasks':    'Kanban Board & Tasks',
+  '/tasks':    'My Board & Tasks',
   '/profile':  'Account Settings',
 };
 
