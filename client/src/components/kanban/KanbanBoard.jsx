@@ -132,7 +132,7 @@ export default function KanbanBoard({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full max-w-full min-w-0">
       {/* ── Toolbar: Search, Filters & View toggles ────────────────────── */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         {/* Left: Search input */}
@@ -234,7 +234,7 @@ export default function KanbanBoard({
       </div>
 
       {/* ── Kanban Columns Grid ────────────────────────────────────────── */}
-      <div className="flex gap-4 overflow-x-auto pb-6 pt-1 items-start min-h-[calc(100vh-250px)]">
+      <div className="flex gap-4 overflow-x-auto pb-6 pt-1 items-start min-h-[calc(100vh-250px)] w-full max-w-full min-w-0">
         {TASK_STATUSES.map((status) => {
           const config = STATUS_CONFIG[status];
           const columnTasks = filteredTasks.filter((t) => t.status === status);

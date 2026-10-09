@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim:      true,
     },
-    passwordHash: { type: String, required: true, select: false },
+    passwordHash: { type: String, required: false, default: null, select: false },
 
     timezone: { type: String, default: 'UTC' },
 
