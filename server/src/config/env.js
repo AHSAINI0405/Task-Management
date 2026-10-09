@@ -23,7 +23,7 @@ const envSchema = z.object({
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
-  console.error('\n❌  Invalid / missing environment variables:\n');
+  console.error('\n  Invalid / missing environment variables:\n');
   Object.entries(parsed.error.flatten().fieldErrors).forEach(([k, v]) =>
     console.error(`  ${k}: ${v.join(', ')}`)
   );
